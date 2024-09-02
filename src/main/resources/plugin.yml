@@ -1,0 +1,72 @@
+main: com.bucketbank.App
+name: BucketFinance
+version: "1.3"
+api-version: 1.18
+commands: 
+  bucketfinance:
+    description: Base command for banking.
+    usage: /<command>
+    aliases:
+      - bf
+permissions:
+  bucketfinance.user:
+    description: "Description will be added later! Bruh!"
+  bucketfinance.account:
+    description: "Description will be added later!"
+  bucketfinance.account.others:
+    description: "Description will be added later!"
+  bucketfinance.reload:
+    description: "Description will be added later!"
+  bucketfinance.atm:
+    description: "Description will be added later!"
+  bucketfinance.atm.remote:
+    description: "Description will be added later!"
+  bucketfinance.atm.advanced:
+    description: "Description will be added later!"
+  bucketfinance.atm.others:
+    description: "Description will be added later!"
+  bucketfinance.balance:
+    description: "Description will be added later!"
+  bucketfinance.balance.others:
+    description: "Description will be added later!"
+  bucketfinance.pay:
+    description: "Description will be added later!"
+  bucketfinance.pay.others:
+    description: "Description will be added later!"
+  bucketfinance.about:
+    description: "Description will be added later!"
+  bucketfinance.about.admin:
+    description: "Description will be added later!"
+  bucketfinance.account.create:
+    description: "Description will be added later!"
+  bucketfinance.account.balance:
+    description: "Description will be added later!"
+  bucketfinance.account.history:
+    description: "Description will be added later!"
+  bucketfinance.account.history.others:
+    description: "Description will be added later!"
+  bucketfinance.account.user:
+    description: "Description will be added later!"
+  bucketfinance.account.suspend:
+    description: "Description will be added later!"
+  bucketfinance.account.reinstate:
+    description: "Description will be added later!"
+  bucketfinance.account.credit:
+    description: "Description will be added later!"
+  bucketfinance.account.rename:
+    description: "Description will be added later!"
+  bucketfinance.user.about:
+    description: "Description will be added later!"
+  bucketfinance.user.about.others:
+    description: "Description will be added later!"
+  bucketfinance.user.suspend:
+    description: "Description will be added later!"
+  bucketfinance.user.reinstate:
+    description: "Description will be added later!"
+  bucketfinance.user.limit:
+    description: "Description will be added later!"
+  bucketfinance.user.accounts:
+    description: "Description will be added later!"
+  bucketfinance.user.accounts.others:
+    description: "Description will be added later!"
+

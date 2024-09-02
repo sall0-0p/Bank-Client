@@ -1,0 +1,258 @@
+# MiniMessage format: https://docs.advntr.dev/minimessage/format.html
+
+# about
+about: |-
+  <color:#DB6D53>| <reset>BucketFinance v1.3 <color:#db6d53>created by <reset>_lordBucket<color:#db6d53>!
+  <color:#DB6D53>| Exchange Course: <reset>%exchange_course% <aqua>diamonds <color:#DB6D53>for <reset>1<gold>$
+about_extended: |-
+  <color:#DB6D53>| <reset>BucketFinance v1.3 <color:#db6d53>created by <reset>_lordBucket<color:#db6d53>!
+  <color:#DB6D53>| Exchange Course: <reset>%exchange_course% <aqua>diamonds <color:#DB6D53>for <reset>1<gold>$
+  <color:#DB6D53>| Diamonds In Economy: <reset>%diamonds_in_economy%
+  <color:#DB6D53>| Currency In Economy: <reset>%currency_in_economy%
+
+# help
+help: |-
+  <color:#DB6D53>| ----------------------------------------
+  <color:#DB6D53>| <gold>/bf balance <color:#DB6D53>- check balance;
+  <color:#DB6D53>| <gold>/bf pay <player> <amount> [Message...] <color:#DB6D53>- send money to the player, you can leave note;
+  <color:#DB6D53>| <gold>/bf history <color:#DB6D53>- history of transactions;
+  <color:#DB6D53>| <gold>/bf accounts <color:#DB6D53>- your accounts;
+  <color:#DB6D53>| ----------------------------------------
+
+# reload
+reloaded: "<color:#66AC7E>| Plugin Reloaded!"
+reload_failed: "<red>| Reload failed!"
+
+# pay command
+# placeholders:
+# %sender% - eitherid of account or username (depending on command) of person who sent
+# %receiver% - either id of account or username (depending on command) of person who sent
+# %amount% - amount of money sent
+# %description% - description
+pay.account: "<color:#66AC7E>| You have sent <gold>%amount%$ <color:#66AC7E>еo account <white>%receiver% <color:#66AC7E>from your personal account!"
+pay.username: "<color:#66AC7E>| You have sent <gold>%amount%$ <color:#66AC7E>to user <white>%receiver% <color:#66AC7E>from your personal account!"
+pay.account_account: "<color:#66AC7E>| You have sent <gold>%amount%$ <color:#66AC7E>to account <white>%receiver% <color:#66AC7E>from account <white>%sender%<color:#66AC7E>!"
+pay.account_username: "<color:#66AC7E>| You have sent <gold>%amount%$ <color:#66AC7E>to user <white>%receiver% <color:#66AC7E>from account <white>%sender%<color:#66AC7E>! "
+
+pay_received.account: "<color:#66AC7E>| You have received <gold>%amount%$ <color:#66AC7E>to account <white>%receiver% <color:#66AC7E>from <white>%sender%<color:#66AC7E>!"
+pay_received.username: "<color:#66AC7E>| You have received <gold>%amount%$ <color:#66AC7E>to your personal account from <white>%sender%<color:#66AC7E>!"
+pay_received.account_account: "<color:#66AC7E>| You have received <gold>%amount%$ <color:#66AC7E>to account <white>%receiver% <color:#66AC7E>from account <white>%sender%<color:#66AC7E>!"
+pay_received.account_username: "<color:#66AC7E>| You have received <gold>%amount%$ <color:#66AC7E>to your personal account from account <white>%sender%<color:#66AC7E>! "
+
+pay.default_note: ""
+
+# user
+# Placeholders:
+# %user% - user nickname
+# %userId% - user ID
+user: 
+  created: "<color:#66AC7E>| User <reset>%user% <color:#66AC7E>created!"
+  deleted: "<color:#66AC7E>| User <reset>%user% <color:#66AC7E>deleted!"
+  suspended: "<color:#66AC7E>| User <reset>%user% <color:#66AC7E>was suspended!"
+  reinstated: "<color:#66AC7E>| User <reset>%user% <color:#66AC7E>is no longer suspended!"
+  limit_changed: "<color:#66AC7E>| Account Limit successfully changed!"
+  status:
+    suspended: "<red>[Suspended]<reset>"
+    not_suspended: "<color:#66AC7E>[Operational]<reset>"
+    deleted: "<dark_red>[Deleted]<reset>"
+  
+  # about has special placeholders
+  # %account% gives account id of user
+  # %status% returns either status.suspended or status.not_suspended
+  # %creation_date% displays account creating date in format: HH:mm dd/MM/yyyy
+  # %account_limit% represents account_limit
+
+  # buttons:
+  # %account_list%
+  # %suspend% - responsible for both suspend and reinstate buttons.
+  about: |-
+    <color:#DB6D53>| ----------------------------------------
+    <color:#DB6D53>| <bold>Info for <gold>%user%<reset>
+    <color:#DB6D53>| ----------------------------------------
+    <color:#DB6D53>| User Status: %status%
+    <color:#DB6D53>| User Created: <reset>%creation_date%<reset>
+    <color:#DB6D53>| Account Limit: <reset>%account_limit%<reset> <hover:show_text:'<reset>Click to here to change %user% accounts limit'><click:suggest_command:/bf user %user% limit set ><color:#DB6D53>[<white>Change<color:#DB6D53>]<reset>
+    <color:#DB6D53>| Personal Account: <reset>%account%<reset>
+    <color:#DB6D53>|
+    <color:#DB6D53>| %account_list% %suspend%
+    <color:#DB6D53>| ----------------------------------------
+
+  buttons:
+    account_list: <hover:show_text:'<reset>Click to see list of accounts %user% owns'><click:run_command:/bf user %user% accounts><color:#DB6D53>[<white>Accounts<color:#DB6D53>]<reset>
+    suspend: <hover:show_text:'<reset>Click to here to suspend %user%'><click:suggest_command:/bf user %user% suspend ><color:#DB6D53>[<white>Suspend<color:#DB6D53>]<reset>
+    reinstate: <hover:show_text:'<reset>Click to here to reinstate %user%'><click:suggest_command:/bf user %user% reinstate ><color:#DB6D53>[<white>Reinstate<color:#DB6D53>]<reset>
+# user
+# Placeholders:
+# %accountId% - account Id
+# %owner% - owner nickname
+# %ownerId% - owner ID
+# %display_name% - account display name
+# %balance% - account balance
+account:
+  created: "<color:#66AC7E>| Account <white>%accountId% <color:#66AC7E>(<white>%owner%<color:#66AC7E>) created!"
+  balance_account: "<color:#DB6D53>| Account <reset>%accountId% <color:#DB6D53>has <gold>%balance%$ <color:#DB6D53>on it."
+  balance_user: "<color:#DB6D53>| User <reset>%owner% <color:#DB6D53>has <gold>%balance%$ <color:#DB6D53>on his personal account."
+  balance_self: "<color:#DB6D53>| You have <gold>%balance%$ <color:#DB6D53>on your personal account."
+  set_balance: "<color:#66AC7E>| Balance of <reset>%owner% <color:#66AC7E>is set to <gold>%balance%$<color:#66AC7E>."
+  suspended: "<color:#66AC7E>| Account <reset>%accountId% <color:#66AC7E>was suspended!"
+  reinstated: "<color:#66AC7E>| Account <reset>%accountId% <color:#66AC7E>is no longer suspended!"
+  credit_changed: "<color:#66AC7E>| Account <reset>%accountId% <color:#66AC7E>has now credit limit of <white>%credit_limit% <color:#66AC7E>and interest of <white>%credit_percent%%<color:#66AC7E> per week."
+  credit_viewed: "<color:#DB6D53>| Account <reset>%accountId% <color:#DB6D53>has credit limit of <white>%credit_limit% <color:#DB6D53>and interest of <white>%credit_percent%%<color:#DB6D53> per week."
+  renamed: "<color:#66AC7E>| You have successfully renamed account <reset>%accountId%<color:#66AC7E>."
+  status:
+    suspended: "<red>[Suspended]<reset>"
+    not_suspended: "<color:#66AC7E>[Operational]<reset>"
+    deleted: "<dark_red>[Deleted]<reset>"
+
+  added_user: "<color:#66AC7E>| Successfully added <white>%username% <color:#66AC7E>to account <white>%accountId%<color:#66AC7E>."
+  removed_user: "<color:#66AC7E>| Successfully removed <white>%username% <color:#66AC7E>from account <white>%accountId%<color:#66AC7E>."
+  list_users:
+    header: "<color:#DB6D53>| Users with access to account:"
+    item: "<newline><color:#DB6D53>| <reset>%user%"
+
+# lists
+lists:
+  # List for accounts. 
+  accounts:
+    # Placeholders for both header and footer:
+    # %user%
+    # %userId%
+    # %account_limit%
+    # %account_count%
+    # %current_page%
+    # %page_count%
+    header: |
+      <color:#DB6D53>| ----------------------------------------
+      <color:#DB6D53>| Page [<white>%current_page%<color:#DB6D53>/<white>%page_count%<color:#DB6D53>] | Accounts of <gold>%user%<reset>
+      <color:#DB6D53>| ----------------------------------------
+      
+    footer: |-
+      <color:#DB6D53>| [<reset>%account_count%/%account_limit%<color:#DB6D53>]
+      <color:#DB6D53>| ----------------------------------------
+
+    # Placeholders for item:
+    # %accountId%
+    # %display_name%
+    # %balance%
+    # %status%
+    item: |
+      <color:#DB6D53>| <white>%display_name% <color:#DB6D53>(<white>%accountId%<color:#DB6D53>): <gold>%balance%$
+      <color:#DB6D53>| > %status%
+
+  accounts_shared:
+    # Placeholders for both header and footer:
+    # %user%
+    # %userId%
+    # %account_limit%
+    # %account_count%
+    # %current_page%
+    # %page_count%
+    header: |
+      <color:#DB6D53>| ----------------------------------------
+      <color:#DB6D53>| Page [<white>%current_page%<color:#DB6D53>/<white>%page_count%<color:#DB6D53>] | Accounts shared with <gold>%user%<reset>
+      <color:#DB6D53>| ----------------------------------------
+      
+    footer: |-
+      <color:#DB6D53>| [<reset>%account_count%/%account_limit%<color:#DB6D53>]
+      <color:#DB6D53>| ----------------------------------------
+
+    # Placeholders for item:
+    # %accountId%
+    # %display_name%
+    # %balance%
+    # %status%
+    item: |
+      <color:#DB6D53>| <white>%display_name% <color:#DB6D53>(<white>%accountId%<color:#DB6D53>): <gold>%balance%$
+      <color:#DB6D53>| > %status%
+  
+  transactions:
+    # Placeholders for header/footer:
+    # %owner%
+    # %ownerId%
+    # %accountId%
+    # %displayName%
+    # %transaction_count%
+    # %current_page%
+    # %page_count%
+    header: |
+      <color:#DB6D53>| ----------------------------------------
+      <color:#DB6D53>| Page [<white>%current_page%<color:#DB6D53>/<white>%page_count%<color:#DB6D53>] | Transactions of <white>%displayName%<reset> <color:#DB6D53>(<white>%accountId%<color:#DB6D53>)
+      <color:#DB6D53>| ----------------------------------------
+
+    footer: |-
+      <color:#DB6D53>| Total Count: <white>%transaction_count%
+      <color:#DB6D53>| ----------------------------------------
+
+    # Placeholders:
+    # %transactionId%
+    # %sourceId%
+    # %type%
+    # %source_player%
+    # %sourceId%
+    # %destination_player%
+    # %destinationId%
+    # %amount%
+    # %description%
+    # %timestamp%
+
+    outbound_item: |
+      <color:#DB6D53>| <bold><red>-%amount%$<reset> <color:#DB6D53>| <hover:show_text:'<color:#DB6D53>Owner: <reset>%destination_player%<newline><color:#DB6D53>ID: <reset>%destinationId%'><white>%destination_displayName%<reset>
+      <color:#DB6D53>| Timestamp: <white>%timestamp%<reset>
+      <color:#DB6D53>| Note: <white>%description%<reset>
+      <color:#DB6D53>| 
+
+    inbound_item: |
+      <color:#DB6D53>| <bold><color:#66AC7E>+%amount%$<reset> <color:#DB6D53>| <hover:show_text:'<color:#DB6D53>Owner: <reset>%source_player%<newline><color:#DB6D53>ID: <reset>%sourceId%'><white>%source_displayName%<reset>
+      <color:#DB6D53>| Timestamp: <white>%timestamp%<reset>
+      <color:#DB6D53>| Note: <white>%description%<reset>
+      <color:#DB6D53>| 
+
+# errors
+command_failed: "<red>| Failed to execute command, check console for errors."
+
+atm:
+  main_page: |-
+    <color:#66AC7E>| ----------------------------------------
+    <color:#66AC7E>| ATM | <reset>Main Menu
+    <color:#66AC7E>| ----------------------------------------
+    <color:#66AC7E>| <click:run_command:/bf atmm page balance_page %accountId%>■<white> Balance
+    <color:#66AC7E>| <click:run_command:/bf atmm page withdraw_page %accountId%>■<white> Withdraw
+    <color:#66AC7E>| <click:run_command:/bf atmm page deposit_page %accountId%>■<white> Deposit
+    <color:#66AC7E>| <click:run_command:/bf atmm page exchange_page %accountId%>■<white> Exchange
+    <color:#66AC7E>| ----------------------------------------
+  deposit_page: |-
+    <color:#66AC7E>| ----------------------------------------
+    <color:#66AC7E>| ATM | <reset>Deposit
+    <color:#66AC7E>| ----------------------------------------
+    <color:#66AC7E>| <click:run_command:/bf atmm deposit %accountId% 32>■ <white>32
+    <color:#66AC7E>| <click:run_command:/bf atmm deposit %accountId% 64>■ <white>64
+    <color:#66AC7E>| <click:suggest_command:/bf atmm deposit %accountId% >■ <white>Custom amount
+    <color:#66AC7E>| <click:run_command:/bf atm %accountId%>■<white> Back
+    <color:#66AC7E>| ----------------------------------------
+  withdraw_page: |-
+    <color:#66AC7E>| ----------------------------------------
+    <color:#66AC7E>| ATM | <reset>Withdraw
+    <color:#66AC7E>| ----------------------------------------
+    <color:#66AC7E>| <click:run_command:/bf atmm withdraw %accountId% 32>■ <white>32
+    <color:#66AC7E>| <click:run_command:/bf atmm withdraw %accountId% 64>■ <white>64
+    <color:#66AC7E>| <click:suggest_command:/bf atmm withdraw %accountId% >■ <white>Custom amount
+    <color:#66AC7E>| <click:run_command:/bf atm %accountId%>■<white> Back
+    <color:#66AC7E>| ----------------------------------------
+  exchange_page: |-
+    <color:#66AC7E>| ----------------------------------------
+    <color:#66AC7E>| ATM | <reset>Exchange
+    <color:#66AC7E>| ----------------------------------------
+    <color:#66AC7E>| <click:suggest_command:/bf atmm exchange diamonds >■ <white>Diamonds <gold>-> <white>Currency
+    <color:#66AC7E>| <click:suggest_command:/bf atmm exchange currency >■ <white>Currency <gold>-> <white>Diamonds
+    <color:#66AC7E>| <click:suggest_command:/bf atmm exchange update >■ <white>Update currency
+    <color:#66AC7E>| <click:run_command:/bf atm %accountId%>■<white> Back
+    <color:#66AC7E>| ----------------------------------------
+  balance_page: |-
+    <color:#66AC7E>| ----------------------------------------
+    <color:#66AC7E>| ATM | <reset>Balance
+    <color:#66AC7E>| ----------------------------------------
+    <color:#66AC7E>| ■ <reset>Your balance is:
+    <color:#66AC7E>| ■ <reset>%balance%<gold>$
+    <color:#66AC7E>| ■ 
+    <color:#66AC7E>| <click:run_command:/bf atm %accountId%>■<white> Back
+    <color:#66AC7E>| ----------------------------------------

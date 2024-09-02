@@ -1,0 +1,47 @@
+# BucketFinance configuration
+# MiniMessage format: https://docs.advntr.dev/minimessage/format.html
+config_version: 1
+
+# Currency settings
+currency:
+  item: PAPER
+  name: "<white>$ <aqua><bold>Coin<reset>"
+  lore: 
+    - "<reset><gray>Example currency, can me adjusted"
+    - "<reset><gray>You can use MiniMessage format here"
+  custom_model_data: 1
+
+decimal_format: "#.##"
+atm_range: 5
+
+webhooks:
+  atm: 
+    color: "7642541"
+    title: "Использование банкомата"
+    url: https://discord.com/api/webhooks/1270859123453595769/tv_6O9l_9QBBadfWW5fBZZd5bHb7VPkNl1zn--A13Pwot2nS1k4cqenj4OI8U1_o0Sr0
+  atm_currency:
+    color: "12608355"
+    title: "Обмен фринов"
+    url: https://discord.com/api/webhooks/1270859123453595769/tv_6O9l_9QBBadfWW5fBZZd5bHb7VPkNl1zn--A13Pwot2nS1k4cqenj4OI8U1_o0Sr0
+  atm_diamonds:
+    color: "6728143"
+    title: "Обмен алмазов"
+    url: https://discord.com/api/webhooks/1270859123453595769/tv_6O9l_9QBBadfWW5fBZZd5bHb7VPkNl1zn--A13Pwot2nS1k4cqenj4OI8U1_o0Sr0
+  atm_update:
+    color: "13413420"
+    title: "Обновление фринов"
+    url: https://discord.com/api/webhooks/1270859123453595769/tv_6O9l_9QBBadfWW5fBZZd5bHb7VPkNl1zn--A13Pwot2nS1k4cqenj4OI8U1_o0Sr0
+  transactions: 
+    url: https://discord.com/api/webhooks/1270859299165569105/DN6ZBkQ-WgYZdpE16myMNSKuZSOqOUI3xVwFcTB0XYzzsoXPZLzMe67MiGgNEwut_AiG
+
+
+data:
+  # define atm block coordinates here
+  atms:
+    - "125 72 86"
+    - "125 72 88"
+    - "-7525 67 -5"
+
+  # Amount of diamonds that were exchanged to make currency cost 1 diamond more
+  exchange_coefficient: 6166
+  compensate_to_accounts: true
