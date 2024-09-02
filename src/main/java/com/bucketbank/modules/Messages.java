@@ -7,10 +7,10 @@ import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
-import com.bucketbank.App;
+import com.bucketbank.Plugin;
 
 public class Messages {
-    private static final App plugin = App.getPlugin();
+    private static final Plugin plugin = Plugin.getPlugin();
 
     private static File customConfigFile;
     private static FileConfiguration customConfig;

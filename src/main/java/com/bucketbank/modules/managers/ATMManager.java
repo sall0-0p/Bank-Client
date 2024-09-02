@@ -4,10 +4,10 @@ import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
-import com.bucketbank.App;
+import com.bucketbank.Plugin;
 
 public class ATMManager {
-    App plugin = App.getPlugin();
+    Plugin plugin = Plugin.getPlugin();
     FileConfiguration config = plugin.getConfig();
 
     public boolean isPlayerNearATM(Player player) {

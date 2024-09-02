@@ -10,13 +10,13 @@ import java.util.logging.Logger;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 
-import com.bucketbank.App;
+import com.bucketbank.Plugin;
 import com.bucketbank.database.AccountsDatabase;
 import com.bucketbank.database.UsersDatabase;
 import com.bucketbank.modules.managers.DatabaseManager;
 
 public class User {
-    private static final App plugin = App.getPlugin();
+    private static final Plugin plugin = Plugin.getPlugin();
     private static final Logger logger = plugin.getLogger();
     private static DatabaseManager databaseManager = plugin.getDatabaseManager();
     private static UsersDatabase usersDatabase = databaseManager.getUsersDatabase();

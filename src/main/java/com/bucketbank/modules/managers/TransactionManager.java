@@ -2,13 +2,13 @@ package com.bucketbank.modules.managers;
 
 import java.util.logging.Logger;
 
-import com.bucketbank.App;
+import com.bucketbank.Plugin;
 import com.bucketbank.database.TransactionsDatabase;
 import com.bucketbank.modules.main.Account;
 import com.bucketbank.modules.main.Transaction;
 
 public class TransactionManager {
-    private App plugin = App.getPlugin();
+    private Plugin plugin = Plugin.getPlugin();
     private Logger logger = plugin.getLogger();
     private TransactionsDatabase transactionsDatabase;
     

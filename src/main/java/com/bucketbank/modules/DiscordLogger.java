@@ -1,7 +1,6 @@
 package com.bucketbank.modules;
 
 import java.io.OutputStream;
-import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 
@@ -9,10 +8,10 @@ import javax.net.ssl.HttpsURLConnection;
 
 import org.bukkit.configuration.file.FileConfiguration;
 
-import com.bucketbank.App;
+import com.bucketbank.Plugin;
 
 public class DiscordLogger {
-    App plugin = App.getPlugin();
+    Plugin plugin = Plugin.getPlugin();
     FileConfiguration config = plugin.getConfig();
 
     public void log(String webhookType, String content) {

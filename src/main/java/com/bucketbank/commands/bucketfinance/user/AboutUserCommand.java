@@ -5,14 +5,13 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import com.bucketbank.App;
+import com.bucketbank.Plugin;
 import com.bucketbank.modules.Command;
 import com.bucketbank.modules.Messages;
 import com.bucketbank.modules.main.User;
@@ -21,7 +20,7 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 
 public class AboutUserCommand implements Command {
-    private static final App plugin = App.getPlugin();
+    private static final Plugin plugin = Plugin.getPlugin();
     private static final MiniMessage mm = MiniMessage.miniMessage();
 
     private Map<String, String> placeholders = new HashMap<>();

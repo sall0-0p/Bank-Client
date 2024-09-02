@@ -3,7 +3,7 @@ package com.bucketbank.commands.bucketfinance.atm;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import com.bucketbank.App;
+import com.bucketbank.Plugin;
 import com.bucketbank.modules.Command;
 import com.bucketbank.modules.DiscordLogger;
 import com.bucketbank.modules.main.Account;
@@ -17,10 +17,10 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 
 public class DepositCommand implements Command {
-    App plugin = App.getPlugin();
+    Plugin plugin = Plugin.getPlugin();
     CurrencyManager currencyManager = plugin.getCurrencyManager();
-    DiscordLogger discordLogger = App.getDiscordLogger();
-    ATMManager atmManager = App.getATMManager();
+    DiscordLogger discordLogger = Plugin.getDiscordLogger();
+    ATMManager atmManager = Plugin.getATMManager();
     private static final MiniMessage mm = MiniMessage.miniMessage();
     
     @Override

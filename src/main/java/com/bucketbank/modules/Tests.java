@@ -2,10 +2,10 @@ package com.bucketbank.modules;
 
 import java.util.logging.Logger;
 
-import com.bucketbank.App;
+import com.bucketbank.Plugin;
 
 public class Tests {
-    private static final App plugin = App.getPlugin();
+    private static final Plugin plugin = Plugin.getPlugin();
     private static final Logger logger = plugin.getLogger();
     
     public Tests() {

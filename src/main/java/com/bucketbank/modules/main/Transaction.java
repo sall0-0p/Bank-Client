@@ -4,7 +4,7 @@ import java.sql.SQLException;
 
 import org.bukkit.OfflinePlayer;
 
-import com.bucketbank.App;
+import com.bucketbank.Plugin;
 import com.bucketbank.database.TransactionsDatabase;
 import com.bucketbank.modules.managers.DatabaseManager;
 
@@ -16,7 +16,7 @@ public class Transaction {
     private long timestamp;
     private String description;
 
-    private DatabaseManager databaseManager = App.getPlugin().getDatabaseManager();
+    private DatabaseManager databaseManager = Plugin.getPlugin().getDatabaseManager();
     private TransactionsDatabase transactionsDatabase = databaseManager.getTransactionsDatabase();
 
     // actual constructor

@@ -10,16 +10,16 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 
-import com.bucketbank.App;
+import com.bucketbank.Plugin;
 import com.bucketbank.database.AccountsDatabase;
 import com.bucketbank.modules.main.User;
 import com.bucketbank.modules.managers.DatabaseManager;
 
 public class CommandCompleter implements TabCompleter {
-    App plugin = App.getPlugin();
+    Plugin plugin = Plugin.getPlugin();
     Logger logger = plugin.getLogger();
 
-    DatabaseManager databaseManager = App.getDatabaseManager();
+    DatabaseManager databaseManager = Plugin.getDatabaseManager();
     AccountsDatabase accountsDatabase = databaseManager.getAccountsDatabase();
 
     public CommandCompleter() {

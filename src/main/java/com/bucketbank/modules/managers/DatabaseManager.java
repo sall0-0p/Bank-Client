@@ -5,14 +5,14 @@ import java.util.logging.Logger;
 
 import org.bukkit.Bukkit;
 
-import com.bucketbank.App;
+import com.bucketbank.Plugin;
 import com.bucketbank.database.AccountsDatabase;
 import com.bucketbank.database.NotificationsDatabase;
 import com.bucketbank.database.TransactionsDatabase;
 import com.bucketbank.database.UsersDatabase;
 
 public class DatabaseManager {
-    private static final App plugin = App.getPlugin();
+    private static final Plugin plugin = Plugin.getPlugin();
     private static final Logger logger = plugin.getLogger();
 
     // Databases

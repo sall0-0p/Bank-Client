@@ -8,7 +8,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 
-import com.bucketbank.App;
+import com.bucketbank.Plugin;
 import com.bucketbank.database.NotificationsDatabase;
 import com.bucketbank.modules.main.Notification;
 
@@ -16,7 +16,7 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 
 public class NotificationManager implements Listener {
-    private static final App plugin = App.getPlugin();
+    private static final Plugin plugin = Plugin.getPlugin();
     private static final Logger logger = plugin.getLogger();
     private static final MiniMessage mm = MiniMessage.miniMessage();
     private static final DatabaseManager databaseManager = plugin.getDatabaseManager();

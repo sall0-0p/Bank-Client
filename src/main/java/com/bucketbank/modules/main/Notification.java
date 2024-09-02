@@ -7,7 +7,7 @@ import java.util.logging.Logger;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 
-import com.bucketbank.App;
+import com.bucketbank.Plugin;
 import com.bucketbank.database.NotificationsDatabase;
 import com.bucketbank.modules.managers.DatabaseManager;
 
@@ -15,7 +15,7 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 
 public class Notification {
-    private static App plugin = App.getPlugin();
+    private static Plugin plugin = Plugin.getPlugin();
     private static Logger logger = plugin.getLogger();
     private static DatabaseManager databaseManager = plugin.getDatabaseManager();
     private static NotificationsDatabase notificationsDatabase = databaseManager.getNotificationsDatabase();

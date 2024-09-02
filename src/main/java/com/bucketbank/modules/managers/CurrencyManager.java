@@ -11,7 +11,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import com.bucketbank.App;
+import com.bucketbank.Plugin;
 
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
@@ -20,7 +20,7 @@ import net.md_5.bungee.api.chat.ComponentBuilder;
 
 public class CurrencyManager {
     private static final MiniMessage mm = MiniMessage.miniMessage();
-    App plugin = App.getPlugin();
+    Plugin plugin = Plugin.getPlugin();
     Logger logger = plugin.getLogger();
 
     public CurrencyManager() {}

@@ -12,7 +12,7 @@ import java.util.Map;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import com.bucketbank.App;
+import com.bucketbank.Plugin;
 import com.bucketbank.database.TransactionsDatabase;
 import com.bucketbank.modules.Command;
 import com.bucketbank.modules.Messages;
@@ -25,7 +25,7 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 
 public class HistoryCommand implements Command {
-    private static final App plugin = App.getPlugin();
+    private static final Plugin plugin = Plugin.getPlugin();
     private static final MiniMessage mm = MiniMessage.miniMessage();
     private static final DatabaseManager databaseManager = plugin.getDatabaseManager();
     private static final TransactionsDatabase transactionsDatabase = databaseManager.getTransactionsDatabase();

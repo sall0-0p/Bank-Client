@@ -6,7 +6,7 @@ import java.util.Map;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 
-import com.bucketbank.App;
+import com.bucketbank.Plugin;
 import com.bucketbank.commands.bucketfinance.AboutCommand;
 import com.bucketbank.commands.bucketfinance.AccountsAliasCommand;
 import com.bucketbank.commands.bucketfinance.BalanceCommand;
@@ -44,7 +44,7 @@ import com.bucketbank.commands.bucketfinance.user.SuspendUserCommand;
 
 public class CommandHandler implements CommandExecutor {
     private final Map<String, Command> commands = new HashMap<>();
-    private final App plugin = App.getPlugin();
+    private final Plugin plugin = Plugin.getPlugin();
 
     public CommandHandler() {
         // main

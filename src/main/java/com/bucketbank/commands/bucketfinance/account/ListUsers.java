@@ -3,14 +3,13 @@ package com.bucketbank.commands.bucketfinance.account;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import com.bucketbank.App;
+import com.bucketbank.Plugin;
 import com.bucketbank.modules.Command;
 import com.bucketbank.modules.Messages;
 import com.bucketbank.modules.main.Account;
@@ -20,7 +19,7 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 
 public class ListUsers implements Command {
-    private static final App plugin = App.getPlugin();
+    private static final Plugin plugin = Plugin.getPlugin();
     private static final MiniMessage mm = MiniMessage.miniMessage();
 
     @Override

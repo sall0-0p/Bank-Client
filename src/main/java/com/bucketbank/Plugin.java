@@ -20,13 +20,13 @@ import com.bucketbank.modules.managers.DatabaseManager;
 import com.bucketbank.modules.managers.NotificationManager;
 import com.bucketbank.modules.managers.TransactionManager;
 
-public class App extends JavaPlugin {
+public class Plugin extends JavaPlugin {
     private static final int currentConfigVersion = 1;
 
     private static Logger logger;
     private static DatabaseManager databaseManager;
     private static TransactionManager transactionManager;
-    private static App plugin;
+    private static Plugin plugin;
     private static CurrencyManager currencyManager;
     private static FileConfiguration config;
     private static ATMManager atmManager;
@@ -88,7 +88,7 @@ public class App extends JavaPlugin {
         logger.info("Banking unloaded");
     }
 
-    public static App getPlugin() {
+    public static Plugin getPlugin() {
         return plugin;
     }
 

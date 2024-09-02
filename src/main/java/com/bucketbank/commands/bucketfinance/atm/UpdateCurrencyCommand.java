@@ -8,11 +8,9 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 
-import com.bucketbank.App;
+import com.bucketbank.Plugin;
 import com.bucketbank.modules.Command;
 import com.bucketbank.modules.DiscordLogger;
-import com.bucketbank.modules.main.Account;
-import com.bucketbank.modules.main.User;
 import com.bucketbank.modules.managers.ATMManager;
 import com.bucketbank.modules.managers.CurrencyManager;
 
@@ -23,11 +21,11 @@ import net.kyori.adventure.text.minimessage.MiniMessage;
 public class UpdateCurrencyCommand implements Command {
     private static final MiniMessage mm = MiniMessage.miniMessage();
 
-    private App plugin = App.getPlugin();
+    private Plugin plugin = Plugin.getPlugin();
     private FileConfiguration config = plugin.getConfig();
-    CurrencyManager currencyManager = App.getCurrencyManager();
-    ATMManager atmManager = App.getATMManager();
-    DiscordLogger discordLogger = App.getDiscordLogger();
+    CurrencyManager currencyManager = Plugin.getCurrencyManager();
+    ATMManager atmManager = Plugin.getATMManager();
+    DiscordLogger discordLogger = Plugin.getDiscordLogger();
 
     @Override
     public void execute(CommandSender sender, String[] args) {

@@ -2,13 +2,13 @@ package com.bucketbank.modules.managers;
 
 import java.util.List;
 
-import com.bucketbank.App;
+import com.bucketbank.Plugin;
 import com.bucketbank.database.AccountsDatabase;
 import com.bucketbank.modules.main.Account;
 
 public class CreditManager {
-    private App plugin = App.getPlugin();
-    private DatabaseManager databaseManager = App.getDatabaseManager();
+    private Plugin plugin = Plugin.getPlugin();
+    private DatabaseManager databaseManager = Plugin.getDatabaseManager();
     private AccountsDatabase accountsDatabase = databaseManager.getAccountsDatabase();
 
     long currentTime = System.currentTimeMillis() / 1000L;

@@ -3,7 +3,7 @@ package com.bucketbank.commands.bucketfinance.atm;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import com.bucketbank.App;
+import com.bucketbank.Plugin;
 import com.bucketbank.modules.Command;
 import com.bucketbank.modules.DiscordLogger;
 import com.bucketbank.modules.main.Account;
@@ -18,10 +18,10 @@ import net.kyori.adventure.text.minimessage.MiniMessage;
 public class WithdrawCommand implements Command {
     private static final MiniMessage mm = MiniMessage.miniMessage();
 
-    App plugin = App.getPlugin();
+    Plugin plugin = Plugin.getPlugin();
     CurrencyManager currencyManager = plugin.getCurrencyManager();
-    ATMManager atmManager = App.getATMManager();
-    DiscordLogger discordLogger = App.getDiscordLogger();
+    ATMManager atmManager = Plugin.getATMManager();
+    DiscordLogger discordLogger = Plugin.getDiscordLogger();
 
     @Override
     public void execute(CommandSender sender, String[] args) {

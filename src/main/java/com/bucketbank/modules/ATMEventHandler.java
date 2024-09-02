@@ -13,11 +13,11 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
-import com.bucketbank.App;
+import com.bucketbank.Plugin;
 
 public class ATMEventHandler implements Listener {
 
-    private final App plugin = App.getPlugin();
+    private final Plugin plugin = Plugin.getPlugin();
     private Set<String> atmLocations;
     private HashMap<UUID, Long> lastInteractionTime = new HashMap<>();
     private long debounceTime = 2000;
