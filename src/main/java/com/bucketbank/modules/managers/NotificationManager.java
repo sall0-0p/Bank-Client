@@ -3,13 +3,13 @@ package com.bucketbank.modules.managers;
 import java.util.List;
 import java.util.logging.Logger;
 
+import com.bucketbank.modules.database.NotificationsDatabase;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 
 import com.bucketbank.Plugin;
-import com.bucketbank.database.NotificationsDatabase;
 import com.bucketbank.modules.main.Notification;
 
 import net.kyori.adventure.text.Component;
@@ -19,7 +19,7 @@ public class NotificationManager implements Listener {
     private static final Plugin plugin = Plugin.getPlugin();
     private static final Logger logger = plugin.getLogger();
     private static final MiniMessage mm = MiniMessage.miniMessage();
-    private static final DatabaseManager databaseManager = plugin.getDatabaseManager();
+    private static final DatabaseManager databaseManager = Plugin.getDatabaseManager();
     private static final NotificationsDatabase notificationsDatabase = databaseManager.getNotificationsDatabase();
 
     @EventHandler
@@ -39,12 +39,10 @@ public class NotificationManager implements Listener {
                     logger.info("Sent notification to player ID: " + playerId + " with content: " + notification.getContent());
                 } catch (Exception e) {
                     logger.severe("Error parsing or sending notification content for player ID: " + playerId + ": " + e.getMessage());
-                    e.printStackTrace();
                 }
             }
         } catch (Exception e) {
             logger.severe("Error handling player join event: " + e.getMessage());
-            e.printStackTrace();
         }
     }
 }

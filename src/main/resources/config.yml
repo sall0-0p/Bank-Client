@@ -2,6 +2,10 @@
 # MiniMessage format: https://docs.advntr.dev/minimessage/format.html
 config_version: 1
 
+backend:
+  host: "http://18.195.158.184"
+  api-key: "22c453e767c5f63d6c81a37210f1984cf0a0137f8289d3526c7f64ab8b0347d2"
+
 # Currency settings
 currency:
   item: PAPER

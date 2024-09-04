@@ -10,6 +10,7 @@ import com.bucketbank.Plugin;
 import com.bucketbank.database.AccountsDatabase;
 import com.bucketbank.modules.managers.DatabaseManager;
 
+@Deprecated
 public class Account {
     private static final Plugin plugin = Plugin.getPlugin();
     private static final Logger logger = plugin.getLogger();

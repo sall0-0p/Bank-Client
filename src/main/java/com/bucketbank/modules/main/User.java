@@ -13,8 +13,8 @@ import org.bukkit.OfflinePlayer;
 import com.bucketbank.Plugin;
 import com.bucketbank.database.AccountsDatabase;
 import com.bucketbank.database.UsersDatabase;
-import com.bucketbank.modules.managers.DatabaseManager;
 
+@Deprecated
 public class User {
     private static final Plugin plugin = Plugin.getPlugin();
     private static final Logger logger = plugin.getLogger();

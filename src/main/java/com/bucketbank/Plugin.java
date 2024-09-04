@@ -3,6 +3,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.logging.Logger;
 
+import com.bucketbank.modules.managers.*;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -10,15 +11,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import com.bucketbank.modules.ATMEventHandler;
 import com.bucketbank.modules.CommandCompleter;
 import com.bucketbank.modules.CommandHandler;
-import com.bucketbank.modules.DiscordLogger;
 import com.bucketbank.modules.Messages;
-import com.bucketbank.modules.Tests;
-import com.bucketbank.modules.managers.ATMManager;
-import com.bucketbank.modules.managers.CreditManager;
-import com.bucketbank.modules.managers.CurrencyManager;
-import com.bucketbank.modules.managers.DatabaseManager;
-import com.bucketbank.modules.managers.NotificationManager;
-import com.bucketbank.modules.managers.TransactionManager;
 
 public class Plugin extends JavaPlugin {
     private static final int currentConfigVersion = 1;
@@ -57,23 +50,16 @@ public class Plugin extends JavaPlugin {
         
         atmManager = new ATMManager();
         currencyManager = new CurrencyManager();
-        discordLogger = new DiscordLogger();
 
         // Init Databases
         databaseManager = new DatabaseManager();
         transactionManager = new TransactionManager();
-
-        // Init credits
-        new CreditManager();
 
         // Register commands
         this.getCommand("bucketfinance").setExecutor(new CommandHandler());
         this.getCommand("bucketfinance").setTabCompleter(new CommandCompleter());
         getServer().getPluginManager().registerEvents(new NotificationManager(), this);
         getServer().getPluginManager().registerEvents(new ATMEventHandler(), this);
-
-        // Tests
-        new Tests();
 
         // Final Log
         logger.info("Banking loaded!");

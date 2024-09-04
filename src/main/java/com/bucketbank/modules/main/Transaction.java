@@ -6,8 +6,8 @@ import org.bukkit.OfflinePlayer;
 
 import com.bucketbank.Plugin;
 import com.bucketbank.database.TransactionsDatabase;
-import com.bucketbank.modules.managers.DatabaseManager;
 
+@Deprecated
 public class Transaction {
     private String transactionId;
     private String sourceAccountId;

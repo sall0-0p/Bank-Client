@@ -4,21 +4,19 @@ import java.lang.Exception;
 import java.util.UUID;
 import java.util.logging.Logger;
 
+import com.bucketbank.modules.database.NotificationsDatabase;
+import com.bucketbank.modules.managers.DatabaseManager;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 
 import com.bucketbank.Plugin;
-import com.bucketbank.database.NotificationsDatabase;
-import com.bucketbank.modules.managers.DatabaseManager;
 
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 
 public class Notification {
-    private static Plugin plugin = Plugin.getPlugin();
-    private static Logger logger = plugin.getLogger();
-    private static DatabaseManager databaseManager = plugin.getDatabaseManager();
-    private static NotificationsDatabase notificationsDatabase = databaseManager.getNotificationsDatabase();
+    private static final DatabaseManager databaseManager = Plugin.getDatabaseManager();
+    private static final NotificationsDatabase notificationsDatabase = databaseManager.getNotificationsDatabase();
     private static final MiniMessage mm = MiniMessage.miniMessage();
 
     private final String userId;
@@ -36,21 +34,13 @@ public class Notification {
             this.userId = id;
             this.content = content;
 
-            try {
-                this.timestamp = notificationsDatabase.createNotification(userId, content);
-            } catch (Exception e) {
-                throw e;
-            }
+            this.timestamp = notificationsDatabase.createNotification(userId, content);
 
             OfflinePlayer player = Bukkit.getOfflinePlayer(UUID.fromString(id));
             if (!(player.getPlayer() == null)) {
-                try {
-                    Component parsed = mm.deserialize(content);
-                    player.getPlayer().sendMessage(parsed);
-                    notificationsDatabase.markAsRead(id, content, timestamp);
-                } catch (Exception e) {
-                    throw e;
-                }
+                Component parsed = mm.deserialize(content);
+                player.getPlayer().sendMessage(parsed);
+                notificationsDatabase.markAsRead(id, content, timestamp);
             }
         } else {
             throw new Exception("Unable to create notification");

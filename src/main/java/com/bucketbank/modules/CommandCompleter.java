@@ -13,7 +13,6 @@ import org.bukkit.entity.Player;
 import com.bucketbank.Plugin;
 import com.bucketbank.database.AccountsDatabase;
 import com.bucketbank.modules.main.User;
-import com.bucketbank.modules.managers.DatabaseManager;
 
 public class CommandCompleter implements TabCompleter {
     Plugin plugin = Plugin.getPlugin();
