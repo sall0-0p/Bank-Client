@@ -6,6 +6,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import com.bucketbank.modules.account.Account;
+import com.bucketbank.modules.user.User;
+import com.bucketbank.modules.user.UserService;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
@@ -14,8 +17,6 @@ import org.bukkit.entity.Player;
 import com.bucketbank.Plugin;
 import com.bucketbank.modules.Command;
 import com.bucketbank.modules.Messages;
-import com.bucketbank.modules.main.Account;
-import com.bucketbank.modules.main.User;
 
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
@@ -23,6 +24,7 @@ import net.kyori.adventure.text.minimessage.MiniMessage;
 public class AccountsCommand implements Command {
     private static final Plugin plugin = Plugin.getPlugin();
     private static final MiniMessage mm = MiniMessage.miniMessage();
+    private final UserService userService = Plugin.getUserService();
 
     @Override
     public void execute(CommandSender sender, String[] args) {
@@ -39,12 +41,12 @@ public class AccountsCommand implements Command {
                 throw new Exception("You have no permission to view this user accounts!");
             }
 
-            User user = new User(player);
-            List<String> accounts = user.getOwnedAccounts();
+            User user = userService.getUserByMinecraftUUIDAsync(player.getUniqueId()).get();
+            List<Account> accounts = userService.getUserAccountsAsync(user.getId()).get();
             Map<String, String> placeholders = new HashMap<>();
 
             // define pages
-            int pageCount = (int) Math.ceil(accounts.size() / 3) + 1;
+            int pageCount = (int) Math.ceil((float) accounts.size() / 3) + 1;
             int currentPage;
             
             if (args.length == 1) {
@@ -53,7 +55,7 @@ public class AccountsCommand implements Command {
                 currentPage = Integer.parseInt(args[1]);
             }
 
-            List<String> cutAccounts = getAccountsFromPage(accounts, currentPage);
+            List<Account> cutAccounts = getAccountsFromPage(accounts, currentPage);
 
             // Setup placeholders
             placeholders.put("%user%", username);
@@ -68,8 +70,8 @@ public class AccountsCommand implements Command {
             String footer = Messages.getString("lists.accounts.footer");
             String body = "";
 
-            for (String accountId : cutAccounts) {
-                body += parseListItem(accountId);
+            for (Account account : cutAccounts) {
+                body += parseListItem(account);
             }
 
             String initialMessage = header + body + footer;
@@ -83,13 +85,11 @@ public class AccountsCommand implements Command {
         }
     }
 
-    private static String parseListItem(String accountId) {
+    private static String parseListItem(Account account) {
         Map<String, String> placeholders = new HashMap<>();
         String initialBody = Messages.getString("lists.accounts.item");
-        
-        Account account = new Account(accountId);
 
-        placeholders.put("%accountId%", account.getAccountId());
+        placeholders.put("%accountId%", account.getId());
         placeholders.put("%display_name%", account.getDisplayName()); 
         placeholders.put("%balance%", String.valueOf(account.getBalance()));
         if (account.isDeleted()) {
@@ -103,7 +103,7 @@ public class AccountsCommand implements Command {
         return parsePlaceholders(initialBody, placeholders);
     }
     
-    private List<String> getAccountsFromPage(List<String> accounts, int page) {
+    private List<Account> getAccountsFromPage(List<Account> accounts, int page) {
         int itemsPerPage = 3;
         int fromIndex = (page - 1) * itemsPerPage;
         int toIndex = Math.min(fromIndex + itemsPerPage, accounts.size());

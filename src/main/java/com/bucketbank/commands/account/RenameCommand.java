@@ -3,13 +3,14 @@ package com.bucketbank.commands.account;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.bucketbank.modules.account.Account;
+import com.bucketbank.modules.account.AccountService;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import com.bucketbank.Plugin;
 import com.bucketbank.modules.Command;
 import com.bucketbank.modules.Messages;
-import com.bucketbank.modules.main.Account;
 
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
@@ -17,8 +18,9 @@ import net.kyori.adventure.text.minimessage.MiniMessage;
 public class RenameCommand implements Command {
     private static final Plugin plugin = Plugin.getPlugin();
     private static final MiniMessage mm = MiniMessage.miniMessage();
+    private static final AccountService accountService = Plugin.getAccountService();
 
-    private Map<String, String> placeholders = new HashMap<>();
+    private final Map<String, String> placeholders = new HashMap<>();
 
     @Override
     public void execute(CommandSender sender, String[] args) {
@@ -31,13 +33,13 @@ public class RenameCommand implements Command {
                 throw new Exception("You have no permission to use this command!");
             }
 
-            Account account = new Account(args[0]);
+            Account account = accountService.getAccountAsync(args[0]).get();
             String name = concatenateArgs(args, 1);
 
             account.setDisplayName(name);
 
             // Setup placeholders
-            placeholders.put("%accountId%", account.getAccountId());
+            placeholders.put("%accountId%", account.getId());
 
             // Print message
             String initialMessage = Messages.getString("account.renamed");

@@ -1,10 +1,16 @@
 package com.bucketbank.modules.user;
 
+import com.bucketbank.Plugin;
+import com.google.gson.Gson;
+
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
 public class User {
+    private final UserService userService = Plugin.getUserService();
+
     // values
     private final UUID id;
     private final UUID minecraftUUID;
@@ -17,7 +23,7 @@ public class User {
     private String personalAccountId;
 
     private final Date createdAt;
-    private Date updatedAt;
+    private final Date updatedAt;
 
     // constructor from JSON
     public User(Map<String, Object> data) {
@@ -32,7 +38,6 @@ public class User {
         this.personalAccountId = data.get("personalAccountId").toString();
         this.createdAt = (Date) data.get("createdAt");
         this.updatedAt = (Date) data.get("updatedAt");
-
     }
 
     public UUID getId() {
@@ -71,15 +76,26 @@ public class User {
         return updatedAt;
     }
 
+    // Setters
+
     public void setSuspended(boolean suspended) {
+        Map<String, Object> jsonMap = new HashMap<>();
+        jsonMap.put("suspended", suspended);
+        userService.updateUserAsync(this.id, jsonMap);
         this.suspended = suspended;
     }
 
     public void setPersonalAccountId(String personalAccountId) {
+        Map<String, Object> jsonMap = new HashMap<>();
+        jsonMap.put("personalAccountId", personalAccountId);
+        userService.updateUserAsync(this.id, jsonMap);
         this.personalAccountId = personalAccountId;
     }
 
     public void setAccountLimit(int accountLimit) {
+        Map<String, Object> jsonMap = new HashMap<>();
+        jsonMap.put("accountLimit", accountLimit);
+        userService.updateUserAsync(this.id, jsonMap);
         this.accountLimit = accountLimit;
     }
 }

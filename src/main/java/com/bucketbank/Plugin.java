@@ -3,13 +3,15 @@ import java.io.File;
 import java.io.IOException;
 import java.util.logging.Logger;
 
+import com.bucketbank.modules.account.AccountService;
 import com.bucketbank.modules.managers.*;
+import com.bucketbank.modules.transaction.TransactionService;
+import com.bucketbank.modules.user.UserService;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.bucketbank.modules.ATMEventHandler;
-import com.bucketbank.modules.CommandCompleter;
 import com.bucketbank.modules.CommandHandler;
 import com.bucketbank.modules.Messages;
 
@@ -18,12 +20,12 @@ public class Plugin extends JavaPlugin {
 
     private static Logger logger;
     private static DatabaseManager databaseManager;
-    private static TransactionManager transactionManager;
     private static Plugin plugin;
     private static CurrencyManager currencyManager;
     private static FileConfiguration config;
-    private static ATMManager atmManager;
-    private static DiscordLogger discordLogger;
+    private static UserService userService;
+    private static AccountService accountService;
+    private static TransactionService transactionService;
     public int diamondsInEconomy;
     public int currencyInEconomy;
 
@@ -47,19 +49,20 @@ public class Plugin extends JavaPlugin {
         loadEconomyData();
 
         new Messages();
-        
-        atmManager = new ATMManager();
+
         currencyManager = new CurrencyManager();
 
         // Init Databases
         databaseManager = new DatabaseManager();
-        transactionManager = new TransactionManager();
 
         // Register commands
         this.getCommand("bucketfinance").setExecutor(new CommandHandler());
-        this.getCommand("bucketfinance").setTabCompleter(new CommandCompleter());
         getServer().getPluginManager().registerEvents(new NotificationManager(), this);
         getServer().getPluginManager().registerEvents(new ATMEventHandler(), this);
+
+        userService = new UserService();
+        accountService = new AccountService();
+        transactionService = new TransactionService();
 
         // Final Log
         logger.info("Banking loaded!");
@@ -78,24 +81,28 @@ public class Plugin extends JavaPlugin {
         return plugin;
     }
 
-    public static DiscordLogger getDiscordLogger() {
-        return discordLogger;
-    }
-
-    public static ATMManager getATMManager() {
-        return atmManager;
-    }
-
     public static DatabaseManager getDatabaseManager() {
         return databaseManager;
     }
 
-    public static TransactionManager getTransactionManager() {
-        return transactionManager;
-    }
-
     public static CurrencyManager getCurrencyManager() {
         return currencyManager;
+    }
+
+    public static UserService getUserService() {
+        return userService;
+    }
+
+    public static Logger getStaticLogger() {
+        return logger;
+    }
+
+    public static AccountService getAccountService() {
+        return accountService;
+    }
+
+    public static TransactionService getTransactionService() {
+        return transactionService;
     }
 
     // Data files

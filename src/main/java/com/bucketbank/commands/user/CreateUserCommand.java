@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
+import com.bucketbank.modules.user.User;
+import com.bucketbank.modules.user.UserService;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
@@ -11,14 +13,13 @@ import org.bukkit.command.CommandSender;
 import com.bucketbank.Plugin;
 import com.bucketbank.modules.Command;
 import com.bucketbank.modules.Messages;
-import com.bucketbank.modules.main.User;
 
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 
 public class CreateUserCommand implements Command {
-    private static final Plugin plugin = Plugin.getPlugin();
     private static final MiniMessage mm = MiniMessage.miniMessage();
+    private final UserService userService = Plugin.getUserService();
 
     private Map<String, String> placeholders = new HashMap<>();
 
@@ -33,13 +34,7 @@ public class CreateUserCommand implements Command {
             UUID userId = player.getUniqueId();
             String username = player.getName();
 
-            float creditLimit = 0;
-            float creditPercent = 0;
-            if (args.length > 2) {
-                creditLimit = Float.valueOf(args[1]);
-                creditPercent = Float.valueOf(args[2]);
-            }
-            User user = new User(player, true, creditLimit, creditPercent);
+            User user = userService.createUser(player.getName()).get();
 
             // Setup placeholders
             placeholders.put("%user%", username);

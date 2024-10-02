@@ -9,25 +9,23 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.bucketbank.Plugin;
+import com.bucketbank.modules.account.Account;
+import com.bucketbank.modules.account.AccountService;
+import com.bucketbank.modules.transaction.Transaction;
+import com.bucketbank.modules.user.User;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import com.bucketbank.Plugin;
-import com.bucketbank.database.TransactionsDatabase;
 import com.bucketbank.modules.Command;
 import com.bucketbank.modules.Messages;
-import com.bucketbank.modules.main.Account;
-import com.bucketbank.modules.main.Transaction;
-import com.bucketbank.modules.main.User;
 
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 
 public class HistoryCommand implements Command {
-    private static final Plugin plugin = Plugin.getPlugin();
     private static final MiniMessage mm = MiniMessage.miniMessage();
-    private static final DatabaseManager databaseManager = plugin.getDatabaseManager();
-    private static final TransactionsDatabase transactionsDatabase = databaseManager.getTransactionsDatabase();
+    private static final AccountService accountService = Plugin.getAccountService();;
 
     @Override
     public void execute(CommandSender sender, String[] args) {
@@ -40,12 +38,12 @@ public class HistoryCommand implements Command {
                 throw new Exception("You have no permission to use this command!");
             }
 
-            List<Transaction> transactions = transactionsDatabase.getTransactionsByAccountId(args[0]);
+            List<Transaction> transactions = accountService.getAccountTransactionsAsync(args[0]).get();
             Collections.reverse(transactions);
             Map<String, String> placeholders = new HashMap<>();
 
             // define pages
-            int pageCount = (int) Math.ceil(transactions.size() / 5) + 1;
+            int pageCount = (int) Math.ceil((float) transactions.size() / 5) + 1;
             int currentPage;
             
             if (args.length == 1) {
@@ -55,19 +53,18 @@ public class HistoryCommand implements Command {
             }
 
             List<Transaction> cutTransactions = getTransactionsFromPage(transactions, currentPage);
-            Account account = new Account(args[0]);
-            User accountOwner = new User(account.getOwnerId());
-            User senderUser = new User(((Player) sender).getUniqueId().toString());
+            Account account = accountService.getAccountAsync(args[0]).get();
+            User accountOwner = account.getOwner();
 
-            if (!account.hasAccess(senderUser) && !sender.hasPermission("bucketfinance.account.history.others")) {
+            if (!sender.hasPermission("bucketfinance.account.history.others")) {
                 throw new Exception("Sender has no access to account!");
             }
 
             // Setup placeholders
             placeholders.put("%user%", accountOwner.getUsername());
-            placeholders.put("%userId%", accountOwner.getUserId());
+            placeholders.put("%userId%", accountOwner.getId().toString());
             placeholders.put("%transaction_count%", String.valueOf(transactions.size()));
-            placeholders.put("%accountId%", account.getAccountId());
+            placeholders.put("%accountId%", account.getId());
             placeholders.put("%displayName%", account.getDisplayName());
             placeholders.put("%current_page%", String.valueOf(currentPage));
             placeholders.put("%page_count%", String.valueOf(pageCount));
@@ -100,10 +97,10 @@ public class HistoryCommand implements Command {
         DateFormat dateFormat = new SimpleDateFormat("HH:mm dd/MM/yyyy");
 
         try {
-            Account sourceAccount = new Account(transaction.getSourceAccountId());
-            Account destinationAccount = new Account(transaction.getDestinationAccountId());
-            User sourceUser = new User(sourceAccount.getOwnerId());
-            User destinationUser = new User(destinationAccount.getOwnerId());
+            Account sourceAccount = accountService.getAccountAsync(transaction.getSourceAccountId()).get();
+            Account destinationAccount = accountService.getAccountAsync(transaction.getDestinationAccountId()).get();
+            User sourceUser = sourceAccount.getOwner();
+            User destinationUser = destinationAccount.getOwner();
 
             placeholders.put("%source_player%", sourceUser.getUsername());
             placeholders.put("%destination_player%", destinationUser.getUsername());

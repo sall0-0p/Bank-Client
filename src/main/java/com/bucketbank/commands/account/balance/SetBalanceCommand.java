@@ -3,22 +3,24 @@ package com.bucketbank.commands.account.balance;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.bucketbank.modules.account.Account;
+import com.bucketbank.modules.account.AccountService;
+import com.bucketbank.modules.user.User;
+import com.bucketbank.modules.user.UserService;
 import org.bukkit.command.CommandSender;
 
 import com.bucketbank.Plugin;
 import com.bucketbank.modules.Command;
 import com.bucketbank.modules.Messages;
-import com.bucketbank.modules.main.Account;
-import com.bucketbank.modules.main.User;
 
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 
 public class SetBalanceCommand implements Command {
-    private static final Plugin plugin = Plugin.getPlugin();
     private static final MiniMessage mm = MiniMessage.miniMessage();
+    private static final AccountService accountService = Plugin.getAccountService();
 
-    private Map<String, String> placeholders = new HashMap<>();
+    private final Map<String, String> placeholders = new HashMap<>();
 
     @Override
     public void execute(CommandSender sender, String[] args) {
@@ -34,9 +36,9 @@ public class SetBalanceCommand implements Command {
             Account account;
             String messageType;
             if (isValidAccountId(args[0])) {
-                if (Account.exists(args[0])) {
+                if (accountService.accountExistsAsync(args[0]).get()) {
                     messageType = "balance_account";
-                    account = new Account(args[0]);
+                    account = accountService.getAccountAsync(args[0]).get();
 
                     try {
                         account.setBalance(Float.parseFloat(args[1]));
@@ -51,10 +53,12 @@ public class SetBalanceCommand implements Command {
                 throw new Exception("This is not account id!");
             }
 
+            User owner = account.getOwner();
+
             // Setup placeholders
-            placeholders.put("%owner%", new User(account.getOwnerId()).getUsername());
-            placeholders.put("%ownerId%", account.getAccountId());
-            placeholders.put("%accountId%", account.getAccountId());
+            placeholders.put("%owner%", owner.getUsername());
+            placeholders.put("%ownerId%", account.getId());
+            placeholders.put("%accountId%", account.getId());
             placeholders.put("%balance%", String.valueOf(account.getBalance()));
 
             // Print message

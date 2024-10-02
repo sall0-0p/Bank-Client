@@ -3,8 +3,16 @@ package com.bucketbank.commands;
 import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
+import com.bucketbank.modules.account.Account;
+import com.bucketbank.modules.account.AccountService;
+import com.bucketbank.modules.notification.Notification;
+import com.bucketbank.modules.transaction.TransactionService;
+import com.bucketbank.modules.user.User;
+import com.bucketbank.modules.user.UserService;
 import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
@@ -12,10 +20,6 @@ import org.bukkit.entity.Player;
 import com.bucketbank.Plugin;
 import com.bucketbank.modules.Command;
 import com.bucketbank.modules.Messages;
-import com.bucketbank.modules.main.Account;
-import com.bucketbank.modules.main.Notification;
-import com.bucketbank.modules.main.User;
-import com.bucketbank.modules.managers.TransactionManager;
 
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
@@ -23,12 +27,14 @@ import net.kyori.adventure.text.minimessage.MiniMessage;
 public class PayCommand implements Command {
     private static final Plugin plugin = Plugin.getPlugin();
     private static final MiniMessage mm = MiniMessage.miniMessage();
-    private final TransactionManager transactionManager = Plugin.getTransactionManager();
-    private final DiscordLogger discordLogger = Plugin.getDiscordLogger();
     private final FileConfiguration config = plugin.getConfig();
 
     private final Map<String, String> placeholders = new HashMap<>();
     private final DecimalFormat decimalFormat = new DecimalFormat(config.getString("decimal_format"));
+
+    private final UserService userService = Plugin.getUserService();
+    private final AccountService accountService = Plugin.getAccountService();
+    private final TransactionService transactionService = Plugin.getTransactionService();
 
     // # %sender% - eitherid of account or username (depending on command) of person who sent
     // # %receiver% - either id of account or username (depending on command) of person who sent
@@ -44,47 +50,35 @@ public class PayCommand implements Command {
 
             String messageType;
             String receiverPlayerId;
+            UUID senderUUID = ((Player) sender).getUniqueId();
 
             if (args.length > 2 && isPositiveInteger(args[2])) {
                 if (isValidAccountId(args[0]) && isValidAccountId(args[1])) {
                     // bf pay accountId accountId amount reason | messageType: account_account
-                    // if (!(accountIsOkay(args[0]) && accountIsOkay(args[1]))) {
-                    //     throw new Exception("There is something wrong with one of the accounts");
-                    // }
-
-                    if (!hasAccess(sender, args[0])) {
-                        throw new Exception("You do not have access to account " + args[0]);
-                    }
 
                     if (args[0].equals(args[1])) {
                         throw new Exception("You cannot send from account to same account!");
                     }
 
-                    transactionManager.createTransaction(args[0], args[1], Float.parseFloat(args[2]), concatenateArgs(args, 3));
+                    // transactionManager.createTransaction(args[0], args[1], Float.parseFloat(args[2]), concatenateArgs(args, 3));
+                    transactionService.createTransaction(args[0], args[1], Float.parseFloat(args[2]), concatenateArgs(args, 3));
                     messageType = "account_account";
-                    receiverPlayerId = new Account(args[1]).getOwnerId();
+                    receiverPlayerId = accountService.getAccountAsync(args[1]).get().getOwner().getMinecraftUUID().toString();
 
                     placeholders.put("%sender%", args[0]);
                     placeholders.put("%receiver%", args[1]);
                 } else if (isValidAccountId(args[0]) && !isValidAccountId(args[1])) {
                     // bf pay accountId username amount reason | messageType: account_username
-                    User destinationUser = new User(Bukkit.getOfflinePlayer(args[1]));
-
-                    // if (!(accountIsOkay(args[0]) && accountIsOkay(destinationUser.getPersonalAccountId()))) {
-                    //     throw new Exception("There is something wrong with one of the accounts");
-                    // }
-
-                    if (!hasAccess(sender, args[0])) {
-                        throw new Exception("You do not have access to account " + args[0]);
-                    }
+                    OfflinePlayer destinationPlayer = Bukkit.getOfflinePlayer(args[1]);
+                    User destinationUser = userService.getUserByMinecraftUUIDAsync(destinationPlayer.getUniqueId()).get();
 
                     if (args[0].equals(destinationUser.getPersonalAccountId())) {
                         throw new Exception("You cannot send from account to same account!");
                     }
 
-                    transactionManager.createTransaction(args[0], destinationUser.getPersonalAccountId(), Float.parseFloat(args[2]), concatenateArgs(args, 3));
+                    transactionService.createTransaction(args[0], destinationUser.getPersonalAccountId(), Float.parseFloat(args[2]), concatenateArgs(args, 3));
                     messageType = "account_username";
-                    receiverPlayerId = destinationUser.getUserId();
+                    receiverPlayerId = destinationUser.getMinecraftUUID().toString();
 
                     placeholders.put("%sender%", args[0]);
                     placeholders.put("%receiver%", destinationUser.getUsername());
@@ -97,7 +91,9 @@ public class PayCommand implements Command {
             } else if (isPositiveInteger(args[1])) {
                 if (isValidAccountId(args[0])) {
                     // bf pay accountId amount reason | messageType: account
-                    User senderUser = new User(((Player) sender).getUniqueId().toString());
+                    // new User(((Player) sender).getUniqueId().toString());
+
+                    User senderUser = userService.getUserByMinecraftUUIDAsync(senderUUID).get();
 
                     // if (!(accountIsOkay(senderUser.getPersonalAccountId()) && accountIsOkay(args[1]))) {
                     //     throw new Exception("There is something wrong with one of the accounts");
@@ -107,24 +103,26 @@ public class PayCommand implements Command {
                         throw new Exception("You cannot send from account to same account!");
                     }
 
-                    transactionManager.createTransaction(senderUser.getPersonalAccountId(), args[0], Float.parseFloat(args[1]), concatenateArgs(args, 2));
+                    transactionService.createTransaction(senderUser.getPersonalAccountId(), args[0], Float.parseFloat(args[1]), concatenateArgs(args, 2));
                     messageType = "account";
-                    receiverPlayerId = new Account(args[0]).getOwnerId();
+                    receiverPlayerId = accountService.getAccountAsync(args[0]).get().getOwner().getMinecraftUUID().toString();
 
                     placeholders.put("%sender%", senderUser.getUsername());
                     placeholders.put("%receiver%", args[0]);
                 } else {
                     // bf pay username amount reason | messageType: username
-                    User senderUser = new User(((Player) sender).getUniqueId().toString());
-                    User destinationUser = new User(Bukkit.getOfflinePlayer(args[0]));
+                    User senderUser = userService.getUserByMinecraftUUIDAsync(senderUUID).get();
+
+                    OfflinePlayer destinationPlayer = Bukkit.getOfflinePlayer(args[0]);
+                    User destinationUser = userService.getUserByMinecraftUUIDAsync(destinationPlayer.getUniqueId()).get();
 
                     if (senderUser.getPersonalAccountId().equals(destinationUser.getPersonalAccountId())) {
                         throw new Exception("You cannot send from account to same account!");
                     }
 
-                    transactionManager.createTransaction(senderUser.getPersonalAccountId(), destinationUser.getPersonalAccountId(), Float.valueOf(args[1]), concatenateArgs(args, 2));
+                    transactionService.createTransaction(senderUser.getPersonalAccountId(), destinationUser.getPersonalAccountId(), Float.parseFloat(args[1]), concatenateArgs(args, 2));
                     messageType = "username";
-                    receiverPlayerId = destinationUser.getUserId();
+                    receiverPlayerId = destinationUser.getMinecraftUUID().toString();
 
                     placeholders.put("%sender%", senderUser.getUsername());
                     placeholders.put("%receiver%", destinationUser.getUsername());
@@ -144,10 +142,6 @@ public class PayCommand implements Command {
 
             Component component = mm.deserialize(parsedMessage);
             sender.sendMessage(component);
-
-            // Discord log
-            String initialPayload = "{\"content\":null,\"embeds\":[{\"title\":\"Транзакция\",\"description\":\">>> %description%\",\"color\":13413420,\"fields\":[{\"name\":\"Отправлятель\",\"value\":\"`%sender%`\",\"inline\":true},{\"name\":\"Получатель\",\"value\":\"`%receiver%`\",\"inline\":true},{\"name\":\"Количество\",\"value\":\"`%amount%`\"}]}],\"attachments\":[]}";
-            discordLogger.logRaw("transactions", parsePlaceholders(initialPayload, placeholders));
 
             // Send message to receiver
 
@@ -205,35 +199,6 @@ public class PayCommand implements Command {
             } catch (NumberFormatException e) {
                 return false;
             }
-        }
-    }
-
-    private boolean accountIsOkay(String str) {
-        Account account = new Account(str);
-        User owner;
-        try {
-            owner = new User(account.getOwnerId());
-        } catch (Exception e) {
-            e.printStackTrace();
-            return false;
-        }
-
-        return !(account.isSuspended() || account.isDeleted() || owner.isSuspended() || owner.isDeleted());
-    }
-
-    private boolean hasAccess(CommandSender sender, String str) {
-        if (sender instanceof Player) {
-            Account account = new Account(str);
-            try {
-                User user = new User(((Player) sender).getUniqueId().toString());
-
-                return (account.hasAccess(user) || sender.hasPermission("bucketfinance.pay.others"));
-            } catch (Exception e) {
-                e.printStackTrace();
-                return false;
-            }
-        } else {
-            return true;
         }
     }
 }

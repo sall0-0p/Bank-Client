@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
+import com.bucketbank.modules.user.User;
+import com.bucketbank.modules.user.UserService;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
@@ -11,7 +13,6 @@ import org.bukkit.command.CommandSender;
 import com.bucketbank.Plugin;
 import com.bucketbank.modules.Command;
 import com.bucketbank.modules.Messages;
-import com.bucketbank.modules.main.User;
 
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
@@ -19,6 +20,7 @@ import net.kyori.adventure.text.minimessage.MiniMessage;
 public class ReinstateUserCommand implements Command {
     private static final Plugin plugin = Plugin.getPlugin();
     private static final MiniMessage mm = MiniMessage.miniMessage();
+    private static final UserService userService = Plugin.getUserService();
 
     private Map<String, String> placeholders = new HashMap<>();
 
@@ -33,8 +35,8 @@ public class ReinstateUserCommand implements Command {
             UUID userId = player.getUniqueId();
             String username = player.getName();
 
-            User user = new User(player);
-            user.reinstate();
+            User user = userService.getUserByMinecraftUUIDAsync(player.getUniqueId()).get();
+            user.setSuspended(false);
 
             // Setup placeholders
             placeholders.put("%user%", username);

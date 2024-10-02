@@ -8,38 +8,23 @@ import org.bukkit.command.CommandSender;
 
 import com.bucketbank.Plugin;
 import com.bucketbank.commands.AboutCommand;
-import com.bucketbank.commands.AccountsAliasCommand;
 import com.bucketbank.commands.BalanceCommand;
 import com.bucketbank.commands.HelpCommand;
-import com.bucketbank.commands.HistoryAliasCommand;
 import com.bucketbank.commands.PayCommand;
 import com.bucketbank.commands.ReloadConfig;
 import com.bucketbank.commands.account.CreateAccountCommand;
-import com.bucketbank.commands.account.CreateAccountSpecialCommand;
-import com.bucketbank.commands.account.CreditCommand;
-import com.bucketbank.commands.account.GiveAccess;
 import com.bucketbank.commands.account.HistoryCommand;
-import com.bucketbank.commands.account.ListUsers;
 import com.bucketbank.commands.account.ReinstateAccountCommand;
-import com.bucketbank.commands.account.RemoveAccess;
 import com.bucketbank.commands.account.RenameCommand;
 import com.bucketbank.commands.account.SuspendAccountCommand;
 import com.bucketbank.commands.account.balance.GetBalanceCommand;
 import com.bucketbank.commands.account.balance.SetBalanceCommand;
-import com.bucketbank.commands.atm.AtmCommand;
-import com.bucketbank.commands.atm.DepositCommand;
-import com.bucketbank.commands.atm.ExchangeCurrencyCommand;
-import com.bucketbank.commands.atm.ExchangeDiamondsCommand;
-import com.bucketbank.commands.atm.PageCommand;
-import com.bucketbank.commands.atm.UpdateCurrencyCommand;
-import com.bucketbank.commands.atm.WithdrawCommand;
 import com.bucketbank.commands.user.AboutUserCommand;
 import com.bucketbank.commands.user.AccountsCommand;
 import com.bucketbank.commands.user.CreateUserCommand;
 import com.bucketbank.commands.user.DeleteUserCommand;
 import com.bucketbank.commands.user.LimitAccountsCommand;
 import com.bucketbank.commands.user.ReinstateUserCommand;
-import com.bucketbank.commands.user.SharedAccountsCommand;
 import com.bucketbank.commands.user.SuspendUserCommand;
 
 public class CommandHandler implements CommandExecutor {
@@ -52,8 +37,6 @@ public class CommandHandler implements CommandExecutor {
         commands.put("reload", new ReloadConfig());
         commands.put("balance", new BalanceCommand());
         commands.put("pay", new PayCommand());
-        commands.put("history", new HistoryAliasCommand());
-        commands.put("accounts", new AccountsAliasCommand());
         commands.put("help", new HelpCommand());
 
         // user
@@ -64,30 +47,15 @@ public class CommandHandler implements CommandExecutor {
         commands.put("user reinstate", new ReinstateUserCommand());
         commands.put("user limit set", new LimitAccountsCommand());
         commands.put("user accounts", new AccountsCommand());
-        commands.put("user shared", new SharedAccountsCommand());
 
         // account
         commands.put("account create", new CreateAccountCommand());
-        commands.put("account special create", new CreateAccountSpecialCommand());
         commands.put("account balance get", new GetBalanceCommand());
         commands.put("account balance set", new SetBalanceCommand());
         commands.put("account history", new HistoryCommand());
-        commands.put("account user add", new GiveAccess());
-        commands.put("account user remove", new RemoveAccess());
-        commands.put("account user list", new ListUsers());
         commands.put("account suspend", new SuspendAccountCommand());
         commands.put("account reinstate", new ReinstateAccountCommand());
-        commands.put("account credit", new CreditCommand());
         commands.put("account rename", new RenameCommand());
-
-        // atm
-        commands.put("atm", new AtmCommand());
-        commands.put("atmm page", new PageCommand());
-        commands.put("atmm deposit", new DepositCommand());
-        commands.put("atmm withdraw", new WithdrawCommand());
-        commands.put("atmm exchange diamonds", new ExchangeDiamondsCommand());
-        commands.put("atmm exchange currency", new ExchangeCurrencyCommand());
-        commands.put("atmm exchange update", new UpdateCurrencyCommand());
     }
 
     @Override

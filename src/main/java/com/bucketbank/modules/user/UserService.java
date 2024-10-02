@@ -24,7 +24,7 @@ public class UserService {
     private final String hostURL;
     private final String apiKey;
 
-    public UserService() throws Exception {
+    public UserService() {
         Plugin plugin = Plugin.getPlugin();
         FileConfiguration config = plugin.getConfig();
 
@@ -69,6 +69,36 @@ public class UserService {
     public CompletableFuture<Boolean> userExistsAsync(UUID userId) {
         CompletableFuture<Boolean> future = new CompletableFuture<>();
         String url = hostURL + "/user/" + userId.toString();
+
+        Request request = new Request.Builder()
+                .url(url)
+                .header("X-API-KEY", apiKey)
+                .build();
+
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                future.completeExceptionally(e);
+            }
+
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                if (response.code() == 200) {
+                    future.complete(true);
+                } else if (response.code() == 404) {
+                    future.complete(false);
+                } else {
+                    future.completeExceptionally(new IOException(String.format("%d: %s", response.code(), response.message())));
+                }
+            }
+        });
+
+        return future;
+    }
+
+    public CompletableFuture<Boolean> userExistsWithMinecraftUUIDAsync(UUID minecraftUUID) {
+        CompletableFuture<Boolean> future = new CompletableFuture<>();
+        String url = hostURL + "/user/mc/" + minecraftUUID.toString();
 
         Request request = new Request.Builder()
                 .url(url)
@@ -154,8 +184,15 @@ public class UserService {
                             }
                         }
 
-                        Account account = new Account(accountData);
-                        accounts.add(account);
+                        try {
+                            Account account = new Account(accountData);
+                            accounts.add(account);
+                        } catch (Exception e) {
+                            // I do not know what I will be doing here.
+                            // Probably something
+
+                            e.printStackTrace();
+                        }
                     }
 
                     future.complete(accounts);

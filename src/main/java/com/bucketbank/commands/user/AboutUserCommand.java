@@ -5,7 +5,10 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Consumer;
 
+import com.bucketbank.modules.user.User;
+import com.bucketbank.modules.user.UserService;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
@@ -14,7 +17,6 @@ import org.bukkit.entity.Player;
 import com.bucketbank.Plugin;
 import com.bucketbank.modules.Command;
 import com.bucketbank.modules.Messages;
-import com.bucketbank.modules.main.User;
 
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
@@ -22,18 +24,20 @@ import net.kyori.adventure.text.minimessage.MiniMessage;
 public class AboutUserCommand implements Command {
     private static final Plugin plugin = Plugin.getPlugin();
     private static final MiniMessage mm = MiniMessage.miniMessage();
+    private final UserService userService = Plugin.getUserService();
 
     private Map<String, String> placeholders = new HashMap<>();
 
     @Override
     public void execute(CommandSender sender, String[] args) {
+
         try {
             if (!sender.hasPermission("bucketfinance.user.about")) {
                 throw new Exception("You have no permission to use this command!");
             }
 
             OfflinePlayer player = Bukkit.getOfflinePlayer(args[0]);
-            User user = new User(player);
+            User user = userService.getUserByMinecraftUUIDAsync(player.getUniqueId()).get();
 
             if (!((Player) sender).getUniqueId().toString().equals(player.getUniqueId().toString()) && !sender.hasPermission("bucketfinance.user.about.others")) {
                 throw new Exception("You have no permission to view this user!");
@@ -41,12 +45,11 @@ public class AboutUserCommand implements Command {
 
             // Setup placeholders
             placeholders.put("%user%", user.getUsername());
-            placeholders.put("%userId%", user.getUserId());
+            placeholders.put("%userId%", user.getId().toString());
             placeholders.put("%account%", user.getPersonalAccountId());
 
             // Parse time
-            long userCreatedEpoch = user.getProfileCreatedTimestamp();
-            Date userCreatedDate = new Date( userCreatedEpoch * 1000 );
+            Date userCreatedDate = user.getCreatedAt();
             DateFormat dateFormat = new SimpleDateFormat("HH:mm dd/MM/yyyy");
 
             placeholders.put("%creation_date%", dateFormat.format(userCreatedDate));

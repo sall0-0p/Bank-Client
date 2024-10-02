@@ -1,18 +1,15 @@
-package com.bucketbank.modules.main;
+package com.bucketbank.modules.notification;
 
-import java.lang.Exception;
-import java.util.UUID;
-import java.util.logging.Logger;
-
+import com.bucketbank.Plugin;
 import com.bucketbank.modules.database.NotificationsDatabase;
 import com.bucketbank.modules.managers.DatabaseManager;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 
-import com.bucketbank.Plugin;
-
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.minimessage.MiniMessage;
+import java.util.UUID;
+import java.util.logging.Logger;
 
 public class Notification {
     private static final DatabaseManager databaseManager = Plugin.getDatabaseManager();
@@ -34,13 +31,21 @@ public class Notification {
             this.userId = id;
             this.content = content;
 
-            this.timestamp = notificationsDatabase.createNotification(userId, content);
+            try {
+                this.timestamp = notificationsDatabase.createNotification(userId, content);
+            } catch (Exception e) {
+                throw e;
+            }
 
             OfflinePlayer player = Bukkit.getOfflinePlayer(UUID.fromString(id));
             if (!(player.getPlayer() == null)) {
-                Component parsed = mm.deserialize(content);
-                player.getPlayer().sendMessage(parsed);
-                notificationsDatabase.markAsRead(id, content, timestamp);
+                try {
+                    Component parsed = mm.deserialize(content);
+                    player.getPlayer().sendMessage(parsed);
+                    notificationsDatabase.markAsRead(id, content, timestamp);
+                } catch (Exception e) {
+                    throw e;
+                }
             }
         } else {
             throw new Exception("Unable to create notification");

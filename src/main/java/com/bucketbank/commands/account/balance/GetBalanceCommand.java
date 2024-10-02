@@ -3,23 +3,27 @@ package com.bucketbank.commands.account.balance;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.bucketbank.modules.account.Account;
+import com.bucketbank.modules.account.AccountService;
+import com.bucketbank.modules.user.User;
+import com.bucketbank.modules.user.UserService;
 import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 
 import com.bucketbank.Plugin;
 import com.bucketbank.modules.Command;
 import com.bucketbank.modules.Messages;
-import com.bucketbank.modules.main.Account;
-import com.bucketbank.modules.main.User;
 
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 
 public class GetBalanceCommand implements Command {
-    private static final Plugin plugin = Plugin.getPlugin();
     private static final MiniMessage mm = MiniMessage.miniMessage();
+    private static final AccountService accountService = Plugin.getAccountService();
+    private static final UserService userService = Plugin.getUserService();
 
-    private Map<String, String> placeholders = new HashMap<>();
+    private final Map<String, String> placeholders = new HashMap<>();
 
     @Override
     public void execute(CommandSender sender, String[] args) {
@@ -33,29 +37,31 @@ public class GetBalanceCommand implements Command {
             }
 
             Account account;
+            User owner;
             String messageType;
             if (isValidAccountId(args[0])) {
-                if (Account.exists(args[0])) {
+                if (accountService.accountExistsAsync(args[0]).get()) {
                     messageType = "balance_account";
-                    account = new Account(args[0]);
+                    account = accountService.getAccountAsync(args[0]).get();
+                    owner = account.getOwner();
                 } else {
                     throw new Exception("Account does not exist!");
                 }
             } else {
-                if (User.existsWithUsername(args[0])) {
-                    User user = new User(Bukkit.getOfflinePlayer(args[0]));
-                    
+                OfflinePlayer player = Bukkit.getOfflinePlayer(args[0]);
+                if (userService.userExistsWithMinecraftUUIDAsync(player.getUniqueId()).get()) {
+                    owner = userService.getUserByMinecraftUUIDAsync(player.getUniqueId()).get();
                     messageType = "balance_user";
-                    account = new Account(user.getPersonalAccountId());
+                    account = accountService.getAccountAsync(owner.getPersonalAccountId()).get();
                 } else {
                     throw new Exception("User does not exist!");
                 }
             }
 
             // Setup placeholders
-            placeholders.put("%owner%", new User(account.getOwnerId()).getUsername());
-            placeholders.put("%ownerId%", account.getAccountId());
-            placeholders.put("%accountId%", account.getAccountId());
+            placeholders.put("%owner%", owner.getUsername());
+            placeholders.put("%ownerId%", account.getId());
+            placeholders.put("%accountId%", account.getId());
             placeholders.put("%balance%", String.valueOf(account.getBalance()));
 
             // Print message

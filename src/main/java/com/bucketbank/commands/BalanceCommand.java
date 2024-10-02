@@ -3,7 +3,12 @@ package com.bucketbank.commands;
 import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
+import com.bucketbank.modules.account.Account;
+import com.bucketbank.modules.account.AccountService;
+import com.bucketbank.modules.user.User;
+import com.bucketbank.modules.user.UserService;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -12,8 +17,6 @@ import org.bukkit.entity.Player;
 import com.bucketbank.Plugin;
 import com.bucketbank.modules.Command;
 import com.bucketbank.modules.Messages;
-import com.bucketbank.modules.main.Account;
-import com.bucketbank.modules.main.User;
 
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
@@ -22,6 +25,8 @@ public class BalanceCommand implements Command {
     private static final Plugin plugin = Plugin.getPlugin();
     private static final MiniMessage mm = MiniMessage.miniMessage();
     private final FileConfiguration config = plugin.getConfig();
+    private final AccountService accountService = Plugin.getAccountService();
+    private final UserService userService = Plugin.getUserService();
 
     private Map<String, String> placeholders = new HashMap<>();
 
@@ -37,22 +42,24 @@ public class BalanceCommand implements Command {
 
             if (args.length == (int) 0) {
                 if (sender instanceof Player) {
-                    User user = new User(((Player) sender).getUniqueId().toString());
+                    UUID senderUUID = ((Player) sender).getUniqueId();
+                    User user = userService.getUserByMinecraftUUIDAsync(senderUUID).get();
 
                     messageType = "balance_self";
-                    account = new Account(user.getPersonalAccountId());
+                    account = accountService.getAccountAsync(user.getPersonalAccountId()).get();
                 } else {
                     throw new Exception("This command has to be issued by player in this way!");
                 }
             } else {
                 if (isValidAccountId(args[0])) {
-                    if (Account.exists(args[0])) {
+                    if (accountService.accountExistsAsync(args[0]).get()) {
                         messageType = "balance_account";
-                        account = new Account(args[0]);
+                        account = accountService.getAccountAsync(args[0]).get();
                         if (sender instanceof Player) {
-                            User user = new User(((Player) sender).getUniqueId().toString());
+                            UUID senderUUID = ((Player) sender).getUniqueId();
+                            User user = userService.getUserByMinecraftUUIDAsync(senderUUID).get();
 
-                            if (!account.hasAccess(user) && !sender.hasPermission("bucketfinance.balance.others")) {
+                            if (!sender.hasPermission("bucketfinance.balance.others")) {
                                 throw new Exception("You do not have access to this account!");
                             }
                         }
@@ -60,11 +67,12 @@ public class BalanceCommand implements Command {
                         throw new Exception("Account does not exist!");
                     }
                 } else {
-                    if (User.existsWithUsername(args[0])) {
-                        User user = new User(Bukkit.getOfflinePlayer(args[0]));
+                    UUID targetUUID = Bukkit.getOfflinePlayer(args[0]).getUniqueId();
+                    if (userService.userExistsWithMinecraftUUIDAsync(targetUUID).get()) {
+                        User user = userService.getUserByMinecraftUUIDAsync(targetUUID).get();
                         
                         messageType = "balance_user";
-                        account = new Account(user.getPersonalAccountId());
+                        account = accountService.getAccountAsync(user.getPersonalAccountId()).get();
 
                         if (sender instanceof Player) {
                             if (!((Player) sender).getName().equals(args[0]) && !sender.hasPermission("bucketfinance.balance.others")) {
@@ -85,9 +93,9 @@ public class BalanceCommand implements Command {
             }
 
             // Setup placeholders
-            placeholders.put("%owner%", new User(account.getOwnerId()).getUsername());
-            placeholders.put("%ownerId%", account.getAccountId());
-            placeholders.put("%accountId%", account.getAccountId());
+            placeholders.put("%owner%", account.getOwner().getUsername());
+            placeholders.put("%ownerId%", account.getId());
+            placeholders.put("%accountId%", account.getId());
             placeholders.put("%balance%", balanceString);
 
             // Print message
@@ -110,7 +118,7 @@ public class BalanceCommand implements Command {
     }
 
     private boolean isValidAccountId(String accountId) {
-        if (accountId == null || accountId.length() != 6) {
+        if (accountId == null || accountId.length() != 8) {
             return false;
         }
         for (char c : accountId.toCharArray()) {

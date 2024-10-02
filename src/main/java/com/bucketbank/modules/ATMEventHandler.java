@@ -18,21 +18,21 @@ import com.bucketbank.Plugin;
 public class ATMEventHandler implements Listener {
 
     private final Plugin plugin = Plugin.getPlugin();
-    private Set<String> atmLocations;
-    private HashMap<UUID, Long> lastInteractionTime = new HashMap<>();
-    private long debounceTime = 2000;
+    private final HashMap<UUID, Long> lastInteractionTime = new HashMap<>();
 
     @EventHandler
     public void onPlayerInteract(PlayerInteractEvent event) {
+        long DEBOUNCE_TIME = 2000;
+
         Player player = event.getPlayer();
         UUID playerUUID = player.getUniqueId();
 
-        this.atmLocations = new HashSet<>(plugin.getConfig().getStringList("data.atms"));
+        Set<String> atmLocations = new HashSet<>(plugin.getConfig().getStringList("data.atms"));
 
         long currentTime = System.currentTimeMillis();
         if (lastInteractionTime.containsKey(playerUUID)) {
             long lastTime = lastInteractionTime.get(playerUUID);
-            if (currentTime - lastTime < debounceTime) {
+            if (currentTime - lastTime < DEBOUNCE_TIME) {
                 return;
             }
         }
